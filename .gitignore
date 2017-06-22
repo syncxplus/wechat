@@ -1,0 +1,10 @@
+# runtime
+/log
+
+# settings
+/php.ini
+/cfg/local.ini
+
+# composer data
+/vendor
+/composer.lock
