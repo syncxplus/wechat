@@ -5,6 +5,7 @@ namespace app;
 use EasyWeChat\Foundation\Application;
 use EasyWeChat\Message\Image;
 use EasyWeChat\Message\Text;
+use helper\Database;
 use helper\Option;
 
 class Index
@@ -23,7 +24,9 @@ class Index
                     }
                     return new Text(['content' => $message->Content]);
                 case 'image':
-                    file_put_contents('/tmp/images.log', $message->PicUrl, LOCK_EX | FILE_APPEND);
+                    $image = new Database('image');
+                    $image['url'] = $message->PicUrl;
+                    $image->save();
                     return new Image(['media_id' => $message->MediaId]);
                 default:
                     ob_start();
