@@ -30,7 +30,7 @@ class Image
 
     function shot($f3)
     {
-        $dir = WEB . '/shot';
+        $dir = WEB . '/photo';
         if (!is_dir($dir)) {
             mkdir($dir);
         }
@@ -51,8 +51,8 @@ class Image
         array_shift($list); //remove ..
 
         if ($list) {
-            $f3->set('image', $f3->get('BASE') . '/shot/' . $list[array_rand($list)]);
-            $f3->set('tag', 'shot');
+            $f3->set('image', $f3->get('BASE') . '/photo/' . $list[array_rand($list)]);
+            $f3->set('tag', 'photo');
             echo \Template::instance()->render('image.html');
         } else {
             $this->get($f3);
