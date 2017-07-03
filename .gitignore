@@ -1,5 +1,7 @@
 # runtime
 /log
+/html/download
+/html/upload
 
 # settings
 /php.ini

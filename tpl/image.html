@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0"/>
+    <title>image</title>
+    <script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 1%;
+        }
+        img {
+            margin-bottom: 1%;
+        }
+    </style>
+</head>
+<body>
+    <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
+    <button id="img-delete" class="btn-block btn btn-success">Refresh</button>
+<script>
+    $("#img-delete").click(function () {
+        location.reload(true);
+    })
+</script>
+</body>
+</html>
