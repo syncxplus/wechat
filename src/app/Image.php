@@ -25,4 +25,14 @@ class Image
         $f3->set('image', $f3->get('BASE') . '/download/' . $name);
         echo \Template::instance()->render('image.html');
     }
+
+    function delete($f3)
+    {
+        $name = $_POST['name'];
+        $file = WEB . '/download' . $name;
+        if (is_file($file)) {
+            unlink($file);
+        }
+        echo 'SUCCESS';
+    }
 }
