@@ -6,7 +6,6 @@ use syncxplus;
 DROP TABLE IF EXISTS image;
 CREATE TABLE image (
   id INT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-  tag VARCHAR(100) DEFAULT '',
   url TEXT,
   PRIMARY KEY (id)
 );

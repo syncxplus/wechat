@@ -2,6 +2,7 @@
 /log
 /html/download
 /html/upload
+/html/shot
 
 # settings
 /php.ini
