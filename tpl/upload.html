@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<head>
+    <title>Upload</title>
+    <include href="common/header.html"/>
+    <style>
+        form {
+            margin: 3% auto;
+        }
+        .btn {
+            border-radius: 0;
+        }
+        #upload {
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <button id="clear" class="btn-block btn btn-default" type="button">清除</button>
+    <form id="upload-form" enctype="multipart/form-data">
+        <input id="upload-file" class="form-control" type="file" name="file"/>
+    </form>
+    <button id="upload" class="btn-block btn btn-primary" type="button">上传</button>
+<script>
+    $(function () {
+        $("#clear").on("click", clear);
+        $("#upload").on("click", upload);
+    })
+
+    function clear() {
+        $("input[type=file]").val("");
+        $("img").remove();
+    }
+
+    function upload() {
+        $("#upload").attr("disabled", true);
+        $("#upload").append("<i class='fa fa-spinner fa-spin'></i>");
+        $.ajax({
+            url: "{{@BASE}}/image/upload",
+            type: "POST",
+            cache: false,
+            data: new FormData(document.getElementById("upload-form")),
+            contentType: false,
+            processData: false
+        })
+            .done(function (data) {
+                console.log(data);
+                $("body").append('<img class="center-block img-responsive img-thumbnail" src="' + data + '"/>')
+            })
+            .fail(alert)
+            .always(function () {
+                $("#upload").removeAttr("disabled");
+                $(".fa.fa-spinner.fa-spin").remove();
+            })
+    }
+</script>
+</body>
+</html>
