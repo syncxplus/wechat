@@ -52,11 +52,13 @@ class Image
 
         if ($list) {
             $f3->set('image', $f3->get('BASE') . '/photo/' . $list[array_rand($list)]);
-            $f3->set('tag', 'photo');
-            echo \Template::instance()->render('image.html');
+
         } else {
-            $this->get($f3);
+            $f3->set('image', 'http://qiniu.syncxplus.com/meta/holder.jpg');
         }
+
+        $f3->set('tag', 'photo');
+        echo \Template::instance()->render('image.html');
     }
 
     function delete($f3)
