@@ -16,7 +16,7 @@
         .btn-group {
             display: flex;
         }
-        #img-delete, #img-move, #img-switch {
+        #img-empty, #img-delete, #img-move, #img-switch {
             flex-grow: 1;
         }
         #img-refresh {
@@ -28,8 +28,13 @@
 <body>
     <div class="btn-group">
         <check if="{{@tag == 'download'}}">
-            <button id="img-delete" class="btn btn-danger">Delete</button>
-            <button id="img-move" class="btn btn-danger">Move</button>
+            <true>
+                <button id="img-empty" class="btn btn-danger">Empty</button>
+                <button id="img-move" class="btn btn-danger">Move</button>
+            </true>
+            <false>
+                <button id="img-delete" class="btn btn-danger">Delete</button>
+            </false>
         </check>
         <button id="img-switch" class="btn btn-danger">Switch</button>
     </div>
@@ -42,14 +47,26 @@
             $("img").css("margin-bottom", $("#img-refresh").outerHeight() + 5);
         }
 
-        $("#img-delete").click(function () {
+        $("#img-empty").click(function () {
             var url = $("img").attr("src");
-            $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/")), tag: "{{@tag}}"})
+            $.post("{{@BASE}}/image/empty")
                 .done(alert)
                 .fail(alert)
                 .always(function () {
                     location.reload(true);
                 });
+        });
+
+        $("#img-delete").click(function () {
+            if (confirm("Sure to delete?")) {
+                var url = $("img").attr("src");
+                $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/")), tag: "{{@tag}}"})
+                    .done(alert)
+                    .fail(alert)
+                    .always(function () {
+                        location.reload(true);
+                    });
+            }
         });
 
         $("#img-move").click(function () {

@@ -72,6 +72,12 @@ class Image
         echo 'SUCCESS';
     }
 
+    function deleteAll($f3)
+    {
+        exec('rm -rf /var/www/html/download/*');
+        echo 'SUCCESS';
+    }
+
     function move($f3)
     {
         $name = $_POST['name'];
