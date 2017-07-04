@@ -48,13 +48,14 @@
         }
 
         $("#img-empty").click(function () {
-            var url = $("img").attr("src");
-            $.post("{{@BASE}}/image/empty")
-                .done(alert)
-                .fail(alert)
-                .always(function () {
-                    location.reload(true);
-                });
+            if (confirm("Sure to empty?")) {
+                $.post("{{@BASE}}/image/empty")
+                    .done(alert)
+                    .fail(alert)
+                    .always(function () {
+                        location.reload(true);
+                    });
+            }
         });
 
         $("#img-delete").click(function () {
