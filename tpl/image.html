@@ -53,7 +53,7 @@
                     .done(alert)
                     .fail(alert)
                     .always(function () {
-                        location.reload(true);
+                        location.href = "{{@BASE}}/shot";
                     });
             }
         });
