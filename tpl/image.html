@@ -1,36 +1,79 @@
 <!DOCTYPE html>
 <head>
+    <title>image</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0"/>
-    <title>image</title>
     <script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="icon" href="http://qiniu.syncxplus.com/icon/testbird.png?imageView2/0/w/100"/>
     <link href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            margin: 1%;
-        }
         img {
-            margin-top: 1%;
-            margin-bottom: 1%;
+            margin: 5px;
+        }
+        .btn {
+            border-radius: 0;
+        }
+        .btn-group {
+            display: flex;
+        }
+        #img-delete, #img-move, #img-switch {
+            flex-grow: 1;
+        }
+        #img-refresh {
+            position: fixed;
+            bottom: 0;
         }
     </style>
 </head>
 <body>
-    <button id="img-delete" class="btn-block btn btn-danger">Delete</button>
+    <div class="btn-group">
+        <check if="{{@tag == 'download'}}">
+            <button id="img-delete" class="btn btn-danger">Delete</button>
+            <button id="img-move" class="btn btn-danger">Move</button>
+        </check>
+        <button id="img-switch" class="btn btn-danger">Switch</button>
+    </div>
     <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
     <button id="img-refresh" class="btn-block btn btn-success">Refresh</button>
 <script>
-    $("#img-delete").click(function () {
-        var url = $("img").attr("src");
-        $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/")), tag: "{{@tag}}"})
-            .done(alert)
-            .fail(alert)
-            .always(function () {
-                location.reload(true);
-            });
-    })
-    $("#img-refresh").click(function () {
-        location.reload(true);
+    $(function () {
+        var offset = $("img").offset().top + $("img").height() - $("#img-refresh").offset().top;
+        if (offset > 0) {
+            $("img").css("margin-bottom", $("#img-refresh").outerHeight() + 5);
+        }
+
+        $("#img-delete").click(function () {
+            var url = $("img").attr("src");
+            $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/")), tag: "{{@tag}}"})
+                .done(alert)
+                .fail(alert)
+                .always(function () {
+                    location.reload(true);
+                });
+        });
+
+        $("#img-move").click(function () {
+            var url = $("img").attr("src");
+            $.post("{{@BASE}}/image/move", {name: url.substr(url.lastIndexOf("/"))})
+                .done(alert)
+                .fail(alert)
+                .always(function () {
+                    location.reload(true);
+                });
+        });
+
+        $("#img-switch").click(function () {
+            var tag = "{{@tag}}";
+            if (tag == "download") {
+                location.href = "{{@BASE}}/shot";
+            } else {
+                location.href = "{{@BASE}}/image";
+            }
+        });
+
+        $("#img-refresh").click(function () {
+            location.reload(true);
+        });
     })
 </script>
 </body>

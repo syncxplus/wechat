@@ -64,9 +64,24 @@ class Image
         $name = $_POST['name'];
         $tag = $_POST['tag'];
         $file = WEB . '/' . $tag . '/' . $name;
+
         if (is_file($file)) {
             unlink($file);
-        } else
+        }
+
+        echo 'SUCCESS';
+    }
+
+    function move($f3)
+    {
+        $name = $_POST['name'];
+        $source = WEB . '/download/' . $name;
+        $target = WEB . '/photo/' . $name;
+
+        if (is_file($source)) {
+            rename($source, $target);
+        }
+
         echo 'SUCCESS';
     }
 }
