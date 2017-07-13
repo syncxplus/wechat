@@ -47,7 +47,9 @@
                 console.log(data);
                 $("body").append('<img class="center-block img-responsive img-thumbnail" src="' + data + '"/>')
             })
-            .fail(alert)
+            .fail(function (data) {
+                alert(data);
+            })
             .always(function () {
                 $("#upload").removeAttr("disabled");
                 $(".fa.fa-spinner.fa-spin").remove();

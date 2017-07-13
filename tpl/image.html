@@ -30,10 +30,10 @@
             </true>
             <false>
                 <button id="img-delete" class="btn btn-danger">Delete</button>
+                <button id="img-upload" class="btn btn-danger">Upload</button>
+                <button id="img-switch" class="btn btn-danger">Switch</button>
             </false>
         </check>
-        <button id="img-upload" class="btn btn-danger">Upload</button>
-        <button id="img-switch" class="btn btn-danger">Switch</button>
     </div>
     <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
     <button id="img-refresh" class="btn-block btn btn-success">换一张</button>
@@ -47,8 +47,12 @@
         $("#img-empty").click(function () {
             if (confirm("Sure to empty?")) {
                 $.post("{{@BASE}}/image/empty")
-                    .done(alert)
-                    .fail(alert)
+                    .done(function (data) {
+                        alert(data);
+                    })
+                    .fail(function (data) {
+                        alert(data);
+                    })
                     .always(function () {
                         location.href = "{{@BASE}}/shot";
                     });
@@ -59,8 +63,12 @@
             if (confirm("Sure to delete?")) {
                 var url = $("img").attr("src");
                 $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/")), tag: "{{@tag}}"})
-                    .done(alert)
-                    .fail(alert)
+                    .done(function (data) {
+                        alert(data);
+                    })
+                    .fail(function (data) {
+                        alert(data);
+                    })
                     .always(function () {
                         location.reload(true);
                     });
@@ -70,8 +78,12 @@
         $("#img-move").click(function () {
             var url = $("img").attr("src");
             $.post("{{@BASE}}/image/move", {name: url.substr(url.lastIndexOf("/"))})
-                .done(alert)
-                .fail(alert)
+                .done(function (data) {
+                    alert(data);
+                })
+                .fail(function (data) {
+                    alert(data);
+                })
                 .always(function () {
                     location.reload(true);
                 });
