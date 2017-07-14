@@ -38,11 +38,11 @@ class Image
         $image = new Database('image');
         $image->load();
         if (!$image->dry()) {
-            $name = preg_replace('/^.+[\\\\\\/]/', '', $image['url']);
+            //http://mmbiz.qpic.cn/mmbiz_jpg/EDHSv38xr2ISkTu2uTTiaXwMu8NlnRVVwn0WodBKjOw9sWR0N8NFngOjjmvkkaJbU2zuGWFq6Gt7uibpJdhxdxIw/0
+            //$name = preg_replace('/^.+[\\\\\\/]/', '', $image['url']);
+            $name = 'wx_' . date('YmdHis') . '.jpg';
             $file = $dir . '/' . $name;
-            if (!is_file($file)) {
-                file_put_contents($file, file_get_contents($image['url']));
-            }
+            file_put_contents($file, file_get_contents($image['url']));
             $image->erase();
         }
 
