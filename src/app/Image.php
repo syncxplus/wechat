@@ -52,7 +52,6 @@ class Image
 
         if ($list) {
             $f3->set('image', $f3->get('BASE') . '/photo/' . $list[array_rand($list)]);
-
         } else {
             $f3->set('image', 'http://qiniu.syncxplus.com/meta/holder.jpg');
         }
