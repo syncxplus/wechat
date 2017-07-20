@@ -11,8 +11,8 @@ class Upload extends \Web
 
     function post($f3)
     {
-        $f3->set('UPLOADS', WEB . '/photo/');
+        $f3->set('UPLOADS', WEB . '/images/');
         list($receive) = array_keys(parent::receive(null, true, false));
-        echo $f3->get('BASE') . '/photo/' . preg_replace('/^.+[\\\\\\/]/', '', $receive);
+        echo $f3->get('BASE') . '/images/' . preg_replace('/^.+[\\\\\\/]/', '', $receive);
     }
 }

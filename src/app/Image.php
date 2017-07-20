@@ -24,13 +24,12 @@ class Image
         }
 
         $f3->set('image', $f3->get('BASE') . '/download/' . $name);
-        $f3->set('tag', 'download');
-        echo \Template::instance()->render('image.html');
+        echo \Template::instance()->render('download.html');
     }
 
     function shot($f3)
     {
-        $dir = WEB . '/photo';
+        $dir = WEB . '/images';
         if (!is_dir($dir)) {
             mkdir($dir);
         }
@@ -51,20 +50,23 @@ class Image
         array_shift($list); //remove ..
 
         if ($list) {
-            $f3->set('image', $f3->get('BASE') . '/photo/' . $list[array_rand($list)]);
+            $f3->set('image', $f3->get('BASE') . '/images/' . $list[array_rand($list)]);
         } else {
             $f3->set('image', 'http://qiniu.syncxplus.com/meta/holder.jpg');
         }
 
-        $f3->set('tag', 'photo');
         echo \Template::instance()->render('image.html');
+    }
+
+    function last($f3)
+    {
+        echo 'TODO';
     }
 
     function delete($f3)
     {
         $name = $_POST['name'];
-        $tag = $_POST['tag'];
-        $file = WEB . '/' . $tag . '/' . $name;
+        $file = WEB . '/images/' . $name;
 
         if (is_file($file)) {
             unlink($file);
@@ -73,7 +75,7 @@ class Image
         echo 'SUCCESS';
     }
 
-    function deleteAll($f3)
+    function emptyAll($f3)
     {
         exec('rm -rf /var/www/html/download/*');
         echo 'SUCCESS';
@@ -83,7 +85,7 @@ class Image
     {
         $name = $_POST['name'];
         $source = WEB . '/download/' . $name;
-        $target = WEB . '/photo/' . $name;
+        $target = WEB . '/images/' . $name;
 
         if (is_file($source)) {
             rename($source, $target);
