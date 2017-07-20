@@ -18,7 +18,7 @@
         #img-move {
             width: 100%;
         }
-        #img-prev, #img-next {
+        #img-prev, #img-next, #img-back {
             flex-grow: 1;
             border: 1px solid;
         }
@@ -32,6 +32,7 @@
     <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
     <div class="btn-group">
         <button id="img-prev" class="btn-block btn btn-success">前一张</button>
+        <button id="img-back" class="btn-block btn btn-success">返回</button>
         <button id="img-next" class="btn-block btn btn-success">后一张</button>
     </div>
 <script>
@@ -66,6 +67,10 @@
             } else{
                 alert("后面已经没有了");
             }
+        });
+
+        $("#img-back").click(function () {
+            location.href = "{{@BASE}}/image";
         });
     })
 </script>
