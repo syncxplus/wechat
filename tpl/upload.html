@@ -44,7 +44,7 @@
             processData: false
         })
             .done(function (data) {
-                console.log(data);
+                alert(data);
                 $("body").append('<img class="center-block img-responsive img-thumbnail" src="' + data + '"/>')
             })
             .fail(function (data) {
