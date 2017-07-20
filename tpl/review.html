@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<head>
+    <title>image</title>
+    <include href="common/header.html"/>
+    <style>
+        img {
+            margin: 5px;
+        }
+        .btn {
+            border-radius: 0;
+        }
+        .btn-group {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        #img-move {
+            width: 100%;
+        }
+        #img-prev, #img-next {
+            flex-grow: 1;
+            border: 1px solid;
+        }
+        .btn-block+.btn-block {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <button id="img-move" class="btn btn-danger">Move</button>
+    <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
+    <div class="btn-group">
+        <button id="img-prev" class="btn-block btn btn-success">前一张</button>
+        <button id="img-next" class="btn-block btn btn-success">后一张</button>
+    </div>
+<script>
+    $(function () {
+        var offset = $("img").offset().top + $("img").height() - $(".btn-group").offset().top;
+        if (offset > 0) {
+            $("img").css("margin-bottom", $("#img-refresh").outerHeight() + 5);
+        }
+
+        $("#img-move").click(function () {
+            var url = $("img").attr("src");
+            $.post("{{@BASE}}/image/move", {name: url.substr(url.lastIndexOf("/"))})
+                .done(function (data) {
+                    alert(data);
+                })
+                .fail(function (data) {
+                    alert(data);
+                });
+        });
+
+        $("#img-prev").click(function () {
+            if (parseInt("{{@page}}") > 1) {
+                location.href = "{{@BASE}}/review?page={{@page - 1}}";
+            } else {
+                alert("前面已经没有了");
+            }
+        });
+
+        $("#img-next").click(function () {
+            if (parseInt("{{@page}}") < parseInt("{{@count}}")) {
+                location.href = "{{@BASE}}/review?page={{@page + 1}}";
+            } else{
+                alert("后面已经没有了");
+            }
+        });
+    })
+</script>
+</body>
+</html>

@@ -26,9 +26,11 @@ class Image
             $f3->log('Album count: {albumCount}', ['albumCount' => $albumCount]);
         }
 
-        // 随机选择相册解析图片总数
+        // 随机选择相册
         $crawler->clear();
         $album = random_int(1, $albumCount);
+
+        //解析相册图片总数
         $response = Request::get(self::$TARGET . '/mm/' . $album)->send();
         $crawler->addHtmlContent($response->body);
         $imageNav = $crawler->filter('#page a');
@@ -45,11 +47,20 @@ class Image
 
         // 随机选择图片
         $crawler->clear();
-        $response = Request::get(self::$TARGET . implode('/', $path))->send();
-        $crawler->addHtmlContent($response->body);
-        $image = $crawler->filter('#content img')->eq(0)->attr('src');
+        $image = self::getFromUrl(self::$TARGET . implode('/', $path));
+
+        //缓存本次访问相册
         array_pop($path);
-        $f3->set('LAST_VISIT_ALBUM', self::$TARGET . implode('/', $path), 600);
+        $f3->set('LAST_VISIT_ALBUM', ['url' => self::$TARGET . implode('/', $path), 'count' => $imageCount], 600);
+
         return $image;
+    }
+
+    public static function getFromUrl($url)
+    {
+        $crawler = new Crawler();
+        $response = Request::get($url)->send();
+        $crawler->addHtmlContent($response->body);
+        return $crawler->filter('#content img')->eq(0)->attr('src');
     }
 }

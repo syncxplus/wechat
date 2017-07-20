@@ -26,7 +26,7 @@ class Index
                         case '最近':
                             $lastVisitAlbum = $f3->get('LAST_VISIT_ALBUM');
                             if (!empty($lastVisitAlbum)) {
-                                return new Text(['content' => $lastVisitAlbum]);
+                                return new Text(['content' => $lastVisitAlbum['url']]);
                             } else {
                                 return new Text(['content' => '最近啥也没有']);
                             }
