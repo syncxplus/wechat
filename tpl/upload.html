@@ -37,7 +37,7 @@
         $("#back").on("click", back);
         $("#clear").on("click", clear);
         $("#upload").on("click", upload);
-    })
+    });
 
     function back() {
         location.href = "{{@BASE}}/shot";
@@ -49,6 +49,7 @@
     }
 
     function upload() {
+        $("img").remove();
         $("#upload").attr("disabled", true);
         $("#upload").append("<i class='fa fa-spinner fa-spin'></i>");
         $.ajax({

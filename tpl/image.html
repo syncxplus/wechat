@@ -29,17 +29,18 @@
     </div>
     <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
     <button id="img-refresh" class="btn-block btn btn-success">换一张</button>
-    <div class="modal in" style="padding-right: 15px;">
+    <div class="modal in">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                     <h4 class="modal-title">输入验证码:</h4>
                 </div>
                 <div class="modal-body">
                     <input id="code" class="form-control"/>
                 </div>
                 <div class="modal-footer">
+                    <button id="cancel" class="btn btn-default">取消</button>
                     <button id="verify" class="btn btn-primary">确定</button>
                 </div>
             </div>
@@ -47,26 +48,33 @@
     </div>
 <script>
     $(function () {
-        var offset = $("img").offset().top + $("img").height() - $("#img-refresh").offset().top;
+        var img = $("img");
+        var refreshButton = $("#img-refresh");
+        var offset = img.offset().top + img.height() - refreshButton.offset().top;
         if (offset > 0) {
-            $("img").css("margin-bottom", $("#img-refresh").outerHeight() + 5);
+            img.css("margin-bottom", refreshButton.outerHeight() + 5);
         }
 
-        $("#verify").click(function () {
-            $.post("{{@BASE}}/verify", {code: $("#code").val()})
+        function show(callback) {
+            window.next = callback;
+            $(".modal.in").show();
+            var code = getCookie("code");
+            if (code) {
+                $("#code").val(code);
+            }
+        }
+
+        function hide() {
+            $(".modal.in").hide();
+        }
+
+        function verify(callback, options) {
+            var code = $("#code").val();
+            $.post("{{@BASE}}/verify", {code: code})
                 .done(function (data) {
                     if (data == "SUCCESS") {
-                        var url = $("img").attr("src");
-                        $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/"))})
-                            .done(function (data) {
-                                alert(data);
-                            })
-                            .fail(function (data) {
-                                alert(data);
-                            })
-                            .always(function () {
-                                location.reload(true);
-                            });
+                        setCookie("code", code, 1);
+                        callback(options);
                     } else {
                         alert(data);
                     }
@@ -77,14 +85,38 @@
                 .always(function () {
                     $(".modal.in").hide();
                 });
+        }
+
+        function deleteImage(){
+            var url = $("img").attr("src");
+            $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/"))})
+                .done(function (data) {
+                    alert(data);
+                })
+                .fail(function (data) {
+                    alert(data);
+                })
+                .always(hide);
+        }
+
+        function uploadImage() {
+            location.href = "{{@BASE}}/upload";
+        }
+
+        $("#close").click(hide);
+
+        $("#cancel").click(hide);
+
+        $("#verify").click(function () {
+            verify(window.next);
         })
 
         $("#img-delete").click(function () {
-            $(".modal.in").show();
+            show(deleteImage);
         });
 
         $("#img-upload").click(function () {
-            location.href = "{{@BASE}}/upload";
+            show(uploadImage);
         });
 
         $("#img-refresh").click(function () {
