@@ -29,6 +29,22 @@
     </div>
     <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
     <button id="img-refresh" class="btn-block btn btn-success">换一张</button>
+    <div class="modal in" style="padding-right: 15px;">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">输入验证码:</h4>
+                </div>
+                <div class="modal-body">
+                    <input id="code" class="form-control"/>
+                </div>
+                <div class="modal-footer">
+                    <button id="verify" class="btn btn-primary">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
 <script>
     $(function () {
         var offset = $("img").offset().top + $("img").height() - $("#img-refresh").offset().top;
@@ -36,20 +52,35 @@
             $("img").css("margin-bottom", $("#img-refresh").outerHeight() + 5);
         }
 
+        $("#verify").click(function () {
+            $.post("{{@BASE}}/verify", {code: $("#code").val()})
+                .done(function (data) {
+                    if (data == "SUCCESS") {
+                        var url = $("img").attr("src");
+                        $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/"))})
+                            .done(function (data) {
+                                alert(data);
+                            })
+                            .fail(function (data) {
+                                alert(data);
+                            })
+                            .always(function () {
+                                location.reload(true);
+                            });
+                    } else {
+                        alert(data);
+                    }
+                })
+                .fail(function (data) {
+                    alert(data);
+                })
+                .always(function () {
+                    $(".modal.in").hide();
+                });
+        })
+
         $("#img-delete").click(function () {
-            if (confirm("Sure to delete?")) {
-                var url = $("img").attr("src");
-                $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/"))})
-                    .done(function (data) {
-                        alert(data);
-                    })
-                    .fail(function (data) {
-                        alert(data);
-                    })
-                    .always(function () {
-                        location.reload(true);
-                    });
-            }
+            $(".modal.in").show();
         });
 
         $("#img-upload").click(function () {
