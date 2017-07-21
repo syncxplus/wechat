@@ -9,23 +9,39 @@
         .btn {
             border-radius: 0;
         }
-        #upload {
+        .btn-group {
+            display: flex;
             position: fixed;
             bottom: 0;
+            width: 100%;
+        }
+        #clear, #upload {
+            flex-grow: 1;
+        }
+        .btn-block+.btn-block {
+            margin-top: 0;
         }
     </style>
 </head>
 <body>
-    <button id="clear" class="btn-block btn btn-default" type="button">清除</button>
+    <button id="back" class="btn-block btn btn-default" type="button">返回</button>
     <form id="upload-form" enctype="multipart/form-data">
         <input id="upload-file" class="form-control" type="file" name="file"/>
     </form>
-    <button id="upload" class="btn-block btn btn-primary" type="button">上传</button>
+    <div class="btn-group">
+        <button id="clear" class="btn-block btn btn-default">clear</button>
+        <button id="upload" class="btn-block btn btn-primary">upload</button>
+    </div>
 <script>
     $(function () {
+        $("#back").on("click", back);
         $("#clear").on("click", clear);
         $("#upload").on("click", upload);
     })
+
+    function back() {
+        location.href = "{{@BASE}}/shot";
+    }
 
     function clear() {
         $("input[type=file]").val("");
