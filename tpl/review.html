@@ -39,7 +39,7 @@
     $(function () {
         var offset = $("img").offset().top + $("img").height() - $(".btn-group").offset().top;
         if (offset > 0) {
-            $("img").css("margin-bottom", $("#img-refresh").outerHeight() + 5);
+            $("img").css("margin-bottom", $(".btn-group").outerHeight() + 5);
         }
 
         $("#img-move").click(function () {
