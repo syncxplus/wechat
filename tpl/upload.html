@@ -26,7 +26,7 @@
 <body>
     <button id="back" class="btn-block btn btn-default" type="button">返回</button>
     <form id="upload-form" enctype="multipart/form-data">
-        <input id="upload-file" class="form-control" type="file" name="file"/>
+        <input id="upload-file" class="form-control" type="file" name="file" multiple="multiple"/>
     </form>
     <div class="btn-group">
         <button id="clear" class="btn-block btn btn-default">clear</button>
@@ -49,26 +49,41 @@
     }
 
     function upload() {
+        //clear previous image display if exists
         $("img").remove();
-        $("#upload").attr("disabled", true);
-        $("#upload").append("<i class='fa fa-spinner fa-spin'></i>");
+        //disable upload button
+        var uploadBtn = $("#upload");
+        uploadBtn.attr("disabled", true);
+        uploadBtn.append("<i class='fa fa-spinner fa-spin'></i>");
+        //list all images
+        var files = $("#upload-file").get(0).files;
+        var images = new FormData();
+        $.each(files, function (key, value) {
+            images.append(key, value);
+        });
+        //ajax upload
         $.ajax({
             url: "{{@BASE}}/image/upload",
             type: "POST",
             cache: false,
-            data: new FormData(document.getElementById("upload-form")),
+            data: images,
             contentType: false,
             processData: false
         })
             .done(function (data) {
                 alert(data);
-                $("body").append('<img class="center-block img-responsive img-thumbnail" src="' + data + '"/>')
+                var json = JSON.parse(data);
+                if (json.images) {
+                    for (var i = 0; i < json.images.length; i++) {
+                        $("body").append('<img class="center-block img-responsive img-thumbnail" src="' + json.images[i] + '"/>')
+                    }
+                }
             })
             .fail(function (data) {
                 alert(data);
             })
             .always(function () {
-                $("#upload").removeAttr("disabled");
+                uploadBtn.removeAttr("disabled");
                 $(".fa.fa-spinner.fa-spin").remove();
             })
     }
