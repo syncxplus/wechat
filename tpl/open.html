@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<head>
+    <title>image</title>
+    <include href="common/header.html"/>
+    <style>
+        img {
+            margin: 5px;
+        }
+        .btn {
+            border-radius: 0;
+        }
+        #img-refresh {
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
+    <button id="img-refresh" class="btn-block btn btn-success">换一张</button>
+<script>
+    $(function () {
+        var img = $("img");
+        var refreshButton = $("#img-refresh");
+        var offset = img.offset().top + img.height() - refreshButton.offset().top;
+        if (offset > 0) {
+            img.css("margin-bottom", refreshButton.outerHeight() + 5);
+        }
+        refreshButton.click(function () {
+            var url = location.href;
+            var pos = url.indexOf("?");
+            if (pos != -1) {
+                url = url.substr(0, pos);
+            }
+            location.href = url + "?ts=" + new Date().getTime();
+        });
+    })
+</script>
+</body>
+</html>

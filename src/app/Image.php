@@ -14,6 +14,24 @@ class Image
         echo \Template::instance()->render('download.html');
     }
 
+    function open($f3)
+    {
+        $excludePattern = '/^(2015-05-|P70206-).+\\.jpg$/';
+        $list = scandir(WEB . '/images');
+        array_shift($list); //remove .
+        array_shift($list); //remove ..
+        if ($list) {
+            $image = $list[array_rand($list)];
+            while (preg_match($excludePattern, $image)) {
+                $image = $list[array_rand($list)];
+            }
+            $f3->set('image', $f3->get('BASE') . '/images/' . $image);
+        } else {
+            $f3->set('image', 'http://qiniu.syncxplus.com/meta/holder.jpg');
+        }
+        echo \Template::instance()->render('open.html');
+    }
+
     function shot($f3)
     {
         $dir = WEB . '/images';
