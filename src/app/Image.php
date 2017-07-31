@@ -93,7 +93,8 @@ class Image
         }
         $file = $dir . '/' . $name;
         if (!is_file($file)) {
-            file_put_contents($file, file_get_contents($image));
+            //file_put_contents($file, file_get_contents($image));
+            exec(sprintf('curl --refer %s -o %s %s', ImageHelper::$TARGET, $file, $image));
         }
         return $f3->get('BASE') . '/download/' . $name;
     }
