@@ -48,6 +48,7 @@ class Image
         // 随机选择图片
         $crawler->clear();
         $image = self::getFromUrl(self::$TARGET . implode('/', $path));
+        $f3->log('extract url ' . $image);
 
         //缓存本次访问相册
         array_pop($path);
@@ -58,6 +59,7 @@ class Image
 
     public static function getFromUrl($url)
     {
+        \Base::instance()->log('random page ' . $url);
         $crawler = new Crawler();
         $response = Request::get($url)->send();
         $crawler->addHtmlContent($response->body);
