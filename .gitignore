@@ -1,11 +1,8 @@
 # runtime
-/log
-/html/download
-/html/upload
-/html/images
+/html/data
+/runtime
 
 # settings
-/php.ini
 /cfg/local.ini
 
 # composer data

@@ -40,7 +40,7 @@ class Index
                 default:
                     ob_start();
                     var_dump($message);
-                    $f3->log(ob_get_clean());
+                    (new \Logger())->debug(ob_get_clean());
             }
             return new Text(['content' => 'Hello world']);
         });

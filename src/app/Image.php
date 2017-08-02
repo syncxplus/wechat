@@ -17,7 +17,7 @@ class Image
     function open($f3)
     {
         $excludePattern = '/^(2015-05-|P70206-).+\\.jpg$/';
-        $list = scandir(WEB . '/images');
+        $list = scandir($f3->UPLOADS);
         array_shift($list); //remove .
         array_shift($list); //remove ..
         if ($list) {
@@ -25,7 +25,7 @@ class Image
             while (preg_match($excludePattern, $image)) {
                 $image = $list[array_rand($list)];
             }
-            $f3->set('image', $f3->get('BASE') . '/images/' . $image);
+            $f3->set('image', $f3->get('BASE') . '/data/uploads/' . $image);
         } else {
             $f3->set('image', 'http://qiniu.syncxplus.com/meta/holder.jpg');
         }
@@ -34,18 +34,14 @@ class Image
 
     function shot($f3)
     {
-        $dir = WEB . '/images';
-        if (!is_dir($dir)) {
-            mkdir($dir);
-        }
-
+        $dir = $f3->UPLOADS;
         $image = new Database('image');
         $image->load();
         if (!$image->dry()) {
             //http://mmbiz.qpic.cn/mmbiz_jpg/EDHSv38xr2ISkTu2uTTiaXwMu8NlnRVVwn0WodBKjOw9sWR0N8NFngOjjmvkkaJbU2zuGWFq6Gt7uibpJdhxdxIw/0
             //$name = preg_replace('/^.+[\\\\\\/]/', '', $image['url']);
             $name = 'wx_' . date('YmdHis') . '.jpg';
-            $file = $dir . '/' . $name;
+            $file = $dir . $name;
             file_put_contents($file, file_get_contents($image['url']));
             $image->erase();
         }
@@ -55,7 +51,7 @@ class Image
         array_shift($list); //remove ..
 
         if ($list) {
-            $f3->set('image', $f3->get('BASE') . '/images/' . $list[array_rand($list)]);
+            $f3->set('image', $f3->get('BASE') . '/data/uploads/' . $list[array_rand($list)]);
         } else {
             $f3->set('image', 'http://qiniu.syncxplus.com/meta/holder.jpg');
         }
@@ -87,22 +83,19 @@ class Image
     {
         $context = substr($image, strlen(ImageHelper::$TARGET));
         $name = preg_replace('/\//', '_', $context);
-        $dir = WEB . '/download';
-        if (!is_dir($dir)) {
-            mkdir($dir);
-        }
-        $file = $dir . '/' . $name;
+        $dir = HTML . '/data/downloads/';
+        $file = $dir . $name;
         if (!is_file($file)) {
             //file_put_contents($file, file_get_contents($image));
             exec(sprintf('curl --refer %s -o %s %s', ImageHelper::$TARGET, $file, $image));
         }
-        return $f3->get('BASE') . '/download/' . $name;
+        return $f3->get('BASE') . '/data/downloads/' . $name;
     }
 
     function delete($f3)
     {
         $name = $_POST['name'];
-        $file = WEB . '/images/' . $name;
+        $file = $f3->UPLOADS . $name;
 
         if (is_file($file)) {
             unlink($file);
@@ -113,15 +106,15 @@ class Image
 
     function emptyAll($f3)
     {
-        exec('rm -rf /var/www/html/download/*');
+        exec('rm -rf /var/www/html/data/downloads/*');
         echo 'SUCCESS';
     }
 
     function move($f3)
     {
         $name = $_POST['name'];
-        $source = WEB . '/download/' . $name;
-        $target = WEB . '/images/' . $name;
+        $source = HTML . '/data/downloads/' . $name;
+        $target = HTML . '/data/uploads/' . $name;
 
         if (is_file($source)) {
             rename($source, $target);

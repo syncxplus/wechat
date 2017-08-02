@@ -1,5 +1,5 @@
 {
-    "name": "syncxplus/php-template",
+    "name": "syncxplus/wechat",
     "authors": [
         {
             "name": "jibo",
@@ -8,16 +8,20 @@
     ],
     "license": "Unlicense",
     "require": {
-        "bcosca/fatfree": "3.6.1",
+        "bcosca/fatfree": "dev-syncxplus",
         "nategood/httpful": "0.2.20",
         "overtrue/wechat": "3.3.2",
         "symfony/dom-crawler": "^3.3",
         "symfony/css-selector": "^3.3"
     },
     "require-dev": {
-        "phpunit/phpunit": "6.1.3"
+        "phpunit/phpunit": "6.1.4"
     },
     "repositories": {
+        "0": {
+            "type": "vcs",
+            "url": "https://github.com/syncxplus/fatfree"
+        },
         "packagist": {
             "type": "composer",
             "url": "https://packagist.phpcomposer.com"

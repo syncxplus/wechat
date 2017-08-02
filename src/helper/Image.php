@@ -11,6 +11,7 @@ class Image
 
     public static function get($f3)
     {
+        $logger = new \Logger();
         $crawler = new Crawler();
 
         // 解析相册总数
@@ -23,7 +24,7 @@ class Image
             $path = explode('/', $latest);
             $albumCount = $path[count($path) - 1];
             $f3->set('ALBUM_COUNT', $albumCount, 3600);
-            $f3->log('Album count: {albumCount}', ['albumCount' => $albumCount]);
+            $logger->debug('Album count: %d', $albumCount);
         }
 
         // 随机选择相册
@@ -38,17 +39,12 @@ class Image
         $path = explode('/', $lastImageHref);
         $imageCount = $path[count($path) - 1];
         $path[count($path) - 1] = random_int(1, $imageCount);
-        $f3->log('Album {album} with {imageCount} images',
-            [
-                'album' => self::$TARGET . '/mm/' . $album,
-                'imageCount' => $imageCount
-            ]
-        );
+        $logger->debug('Album %s with %d images', self::$TARGET . '/mm/' . $album, $imageCount);
 
         // 随机选择图片
         $crawler->clear();
         $image = self::getFromUrl(self::$TARGET . implode('/', $path));
-        $f3->log('extract url ' . $image);
+        $logger->debug('extract url ' . $image);
 
         //缓存本次访问相册
         array_pop($path);
@@ -59,7 +55,6 @@ class Image
 
     public static function getFromUrl($url)
     {
-        \Base::instance()->log('random page ' . $url);
         $crawler = new Crawler();
         $response = Request::get($url)->send();
         $crawler->addHtmlContent($response->body);
