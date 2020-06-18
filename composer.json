@@ -8,15 +8,12 @@
     ],
     "license": "Unlicense",
     "require": {
-        "bcosca/fatfree": "dev-3.6.5-syncxplus",
-        "nategood/httpful": "0.2.20",
+        "bcosca/fatfree": "dev-3.7.1-syncxplus",
+        "nategood/httpful": "*",
         "overtrue/wechat": "3.3.2",
         "qiniu/php-sdk": "7.1.3",
         "symfony/dom-crawler": "^3.3",
         "symfony/css-selector": "^3.3"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "6.1.4"
     },
     "repositories": {
         "0": {
