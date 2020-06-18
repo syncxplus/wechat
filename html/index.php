@@ -44,6 +44,8 @@ call_user_func(function ($f3) {
         }
     }
 
+    $f3->LOGGER = new Log(date('Y-m-d.\l\o\g'));
+
     if (PHP_SAPI != 'cli') {
         $f3->run();
     }

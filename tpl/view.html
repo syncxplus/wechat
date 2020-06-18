@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+    <title>image</title>
+    <include href="common/header.html"/>
+    <style>
+        img {
+            margin: 0.5rem;
+        }
+        #img-refresh {
+            position: fixed;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <repeat group="{{@images}}" value="{{@image}}">
+    <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
+    </repeat>
+    <button id="img-refresh" class="btn-block btn btn-success">换一张</button>
+<script>
+    $(function () {
+        $("#img-refresh").on("click", function () {
+            location.reload();
+        });
+    })
+</script>
+</body>
+</html>

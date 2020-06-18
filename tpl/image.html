@@ -48,17 +48,17 @@
     </div>
 <script>
     $(function () {
-        var img = $("img");
-        var refreshButton = $("#img-refresh");
-        var offset = img.offset().top + img.height() - refreshButton.offset().top;
+        let img = $("img");
+        let refreshButton = $("#img-refresh");
+        let offset = img.offset().top + img.height() - refreshButton.offset().top;
         if (offset > 0) {
             img.css("margin-bottom", refreshButton.outerHeight() + 5);
         }
 
-        function show(callback) {
+        function exec(callback) {
             window.next = callback;
             $(".modal.in").show();
-            var code = getCookie("code");
+            let code = getCookie("code");
             if (code) {
                 $("#code").val(code);
             }
@@ -69,7 +69,7 @@
         }
 
         function verify(callback, options) {
-            var code = $("#code").val();
+            let code = $("#code").val();
             $.post("{{@BASE}}/verify", {code: code})
                 .done(function (data) {
                     if (data == "SUCCESS") {
@@ -88,7 +88,7 @@
         }
 
         function deleteImage(){
-            var url = $("img").attr("src");
+            let url = $("img").attr("src");
             $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/"))})
                 .done(function (data) {
                     alert(data);
@@ -103,25 +103,25 @@
             location.href = "{{@BASE}}/upload";
         }
 
-        $("#close").click(hide);
+        $("#close").on("click", hide);
 
-        $("#cancel").click(hide);
+        $("#cancel").on("click", hide);
 
-        $("#verify").click(function () {
+        $("#verify").on("click", function () {
             verify(window.next);
         })
 
-        $("#img-delete").click(function () {
-            show(deleteImage);
+        $("#img-delete").on("click", function () {
+            exec(deleteImage);
         });
 
-        $("#img-upload").click(function () {
-            show(uploadImage);
+        $("#img-upload").on("click", function () {
+            exec(uploadImage);
         });
 
-        $("#img-refresh").click(function () {
-            var url = location.href;
-            var pos = url.indexOf("?");
+        $("#img-refresh").on("click", function () {
+            let url = location.href;
+            let pos = url.indexOf("?");
             if (pos != -1) {
                 url = url.substr(0, pos);
             }

@@ -2,16 +2,19 @@
 
 namespace app;
 
-use helper\Database;
 use helper\Image as ImageHelper;
 
 class Image
 {
-    function get($f3)
+    const HOLDER = 'https://qiniu.syncxplus.com/meta/holder.jpg';
+
+    function get(\Base $f3)
     {
-        $image = ImageHelper::get($f3);
-        $f3->set('image', $this->download($f3, $image));
-        echo \Template::instance()->render('download.html');
+        //$image = ImageHelper::get($f3);
+        //$f3->set('image', $this->download($f3, $image));
+        //echo \Template::instance()->render('download.html');
+        $f3->set('images', ImageHelper::get());
+        echo \Template::instance()->render('view.html');
     }
 
     function open($f3)
@@ -27,7 +30,7 @@ class Image
             }
             $f3->set('image', $f3->get('BASE') . '/data/uploads/' . $image);
         } else {
-            $f3->set('image', 'http://qiniu.syncxplus.com/meta/holder.jpg');
+            $f3->set('image', self::HOLDER);
         }
         echo \Template::instance()->render('open.html');
     }
@@ -35,16 +38,6 @@ class Image
     function shot($f3)
     {
         $dir = $f3->UPLOADS;
-        $image = new Database('image');
-        $image->load();
-        if (!$image->dry()) {
-            //http://mmbiz.qpic.cn/mmbiz_jpg/EDHSv38xr2ISkTu2uTTiaXwMu8NlnRVVwn0WodBKjOw9sWR0N8NFngOjjmvkkaJbU2zuGWFq6Gt7uibpJdhxdxIw/0
-            //$name = preg_replace('/^.+[\\\\\\/]/', '', $image['url']);
-            $name = 'wx_' . date('YmdHis') . '.jpg';
-            $file = $dir . $name;
-            file_put_contents($file, file_get_contents($image['url']));
-            $image->erase();
-        }
 
         $list = scandir($dir);
         array_shift($list); //remove .
@@ -53,7 +46,7 @@ class Image
         if ($list) {
             $f3->set('image', $f3->get('BASE') . '/data/uploads/' . $list[array_rand($list)]);
         } else {
-            $f3->set('image', 'http://qiniu.syncxplus.com/meta/holder.jpg');
+            $f3->set('image', self::HOLDER);
         }
 
         echo \Template::instance()->render('image.html');
