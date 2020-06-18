@@ -9,6 +9,7 @@ class Image
 {
     public static $TARGET = 'http://www.mmjpg.com';
     const HOST = 'https://www.ku137.net';
+    const CACHE = 3600 * 24 * 7;
 
     public static function get()
     {
@@ -27,32 +28,38 @@ class Image
             for ($i = 0; $i < $list->count(); $i++) {
                 $tags[$i] = $list->eq($i)->attr('href');
             }
-            $f3->set('tags', $tags, 3600);
+            $f3->set('tags', $tags, self::CACHE);
         }
         //随机选择一个相册计算页面总数
         $tag = random_int(1, count($tags));
-        $tagUrl = self::HOST . $tags[$tag];
-        $logger->write('tag:' . $tagUrl);
-        $response = Request::get($tagUrl)->send();
-        $crawler->clear();
-        $crawler->addHtmlContent($response->body);
-        $pages = $crawler->filter('.page a');
-        if ($pages->count() > 1) {
-            $lastPage = $pages->eq($pages->count() - 1)->attr('href');
-            $suffix = '.html';
-            $lastPage = substr($lastPage, 0, 0 - strlen($suffix));
-            $explode = explode('_', $lastPage);
-            $pageCount = array_pop($explode);
-            //随机选择一个页面内图片
-            $page = random_int(1, $pageCount);
-            $pageUrl = self::HOST . $tags[$tag] . implode('_', $explode) . '_' . $page . $suffix;
+        $key = "tag_{$tag}_page_count";
+        if ($f3->exists($key)) {
+            $pageCount = $f3->get($key);
         } else {
-            $pageUrl = $tagUrl;
+            $tagUrl = self::HOST . $tags[$tag];
+            $logger->write('tag:' . $tagUrl);
+            $response = Request::get($tagUrl)->send();
+            $crawler->clear();
+            $crawler->addHtmlContent($response->body);
+            $pages = $crawler->filter('.page a[href]');
+            $lastPage = $pages->eq(count($pages) - 1)->attr('href');
+            $explode = explode('_', substr($lastPage, 0, 0 - strlen('.html')));
+            $pageCount = array_pop($explode);
+            $f3->set($key, $pageCount, self::CACHE);
         }
+        $page = ($pageCount == 1) ? $pageCount : random_int(1, $pageCount);
+        $tagNumber = explode('/', $tags[$tag])[2];
+        $pageUrl = self::HOST . $tags[$tag] . 'list_' . $tagNumber . '_' . $page . '.html';
         $logger->write('page: ' . $pageUrl);
-        $response = Request::get($pageUrl)->send();
+        $key = 'page_' . md5($pageUrl);
+        if ($f3->exists($key)) {
+            $body = $f3->get($key);
+        } else {
+            $body = Request::get($pageUrl)->send()->body;
+            $f3->set($key, $body, self::CACHE);
+        }
         $crawler->clear();
-        $crawler->addHtmlContent($response->body);
+        $crawler->addHtmlContent($body);
         $links = $crawler->filter('a[title]');
         $total = $links->count();
         $header = 6;
@@ -64,9 +71,15 @@ class Image
         $url = $links->eq($idx)->attr('href');
         $logger->write('url: ' . $url);
         //提取图片链接
-        $response = Request::get($url)->send();
+        $key = 'image_' . md5($url);
+        if ($f3->exists($key)) {
+            $body = $f3->get($key);
+        } else {
+            $body = Request::get($url)->send()->body;
+            $f3->set($key, $body, self::CACHE);
+        }
         $crawler->clear();
-        $crawler->addHtmlContent($response->body);
+        $crawler->addHtmlContent($body);
         $images = $crawler->filter('img.tupian_img');
         $data = [];
         for ($i = 0; $i < $images->count(); $i++) {
