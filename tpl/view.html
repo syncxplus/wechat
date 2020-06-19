@@ -44,7 +44,7 @@
         });
         $("#img-next").on("click", function () {
             if (images.length) {
-                $("img.center-block").attr("src", images.shift());
+                $("img.center-block").removeAttr("src").attr("src", images.shift());
             } else {
                 $("img.center-block").attr("disabled", "disabled");
                 alert("没有了")
