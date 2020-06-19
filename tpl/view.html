@@ -4,24 +4,48 @@
     <include href="common/header.html"/>
     <style>
         img {
-            margin: 0.5rem;
+            margin: 0.75rem 0;
         }
-        #img-refresh {
+        .btn {
+            padding: 1rem;
+            width: 100%;
+            font-size: 1.25rem;
+            border-radius: 0;
+        }
+        .btn-group {
             position: fixed;
             bottom: 0;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <repeat group="{{@images}}" value="{{@image}}">
-    <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
-    </repeat>
-    <button id="img-refresh" class="btn-block btn btn-success">换一张</button>
+<div class="container-fluid">
+    <img class="center-block img-responsive img-thumbnail"/>
+</div>
+<div class="btn-group">
+    <button id="img-refresh" class="btn btn-outline-success">换一组</button>
+    <button id="img-download" class="btn btn-outline-success">保存</button>
+    <button id="img-next" class="btn btn-outline-success">下一张</button>
+</div>
 <script>
     $(function () {
+        let images = "{{@images}}".split(",");
+        $("img.center-block").attr("src", images.shift());
         $("#img-refresh").on("click", function () {
             location.reload();
         });
+        $("#img-download").on("click", function () {
+            $.post("{{@BASE}}/image/save", {url: $("img.center-block").attr("src")})
+        });
+        $("#img-next").on("click", function () {
+            if (images.length) {
+                $("img.center-block").attr("src", images.shift());
+            } else {
+                $("img.center-block").attr("disabled", "disabled");
+                alert("没有了")
+            }
+        })
     })
 </script>
 </body>

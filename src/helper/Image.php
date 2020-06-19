@@ -64,9 +64,8 @@ class Image
         $total = $links->count();
         $header = 6;
         $footer = 2;
-        $count = $total - $header - $footer;
         $logger->write("total: $total, header: $header, footer: $footer");
-        $idx = random_int($header, $count - 1);
+        $idx = random_int($header, $total - $footer - 1);
         $logger->write("id: $idx");
         $url = $links->eq($idx)->attr('href');
         $logger->write('url: ' . $url);

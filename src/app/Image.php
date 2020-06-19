@@ -13,7 +13,7 @@ class Image
         //$image = ImageHelper::get($f3);
         //$f3->set('image', $this->download($f3, $image));
         //echo \Template::instance()->render('download.html');
-        $f3->set('images', ImageHelper::get());
+        $f3->set('images', implode(',', ImageHelper::get()));
         echo \Template::instance()->render('view.html');
     }
 
@@ -52,37 +52,18 @@ class Image
         echo \Template::instance()->render('image.html');
     }
 
-    function review($f3)
+    function download($f3)
     {
-        $album = $f3->get('LAST_VISIT_ALBUM');
-        if ($album) {
-            $page = $_GET['page'] ?? 1;
-            if ($page >= 1 && $page <= $album['count']) {
-                $url = $album['url'] . '/' . $page;
-                $f3->set('page', $page);
-                $f3->set('count', $album['count']);
-                $f3->set('image', $this->download($f3, ImageHelper::getFromUrl($url)));
-                echo \Template::instance()->render('review.html');
-                return;
-            } else {
-                echo '<h1>Overflow</h1>';
-            }
-        } else {
-            echo '<h1>Nothing to review</h1>';
-        }
-    }
-
-    function download($f3, $image)
-    {
-        $context = substr($image, strlen(ImageHelper::$TARGET));
-        $name = preg_replace('/\//', '_', $context);
-        $dir = HTML . '/data/downloads/';
+        $url = $f3->get('POST.url');
+        $path = explode('/', parse_url($url, PHP_URL_PATH));
+        $name = end($path);
+        $dir = HTML . '/data/uploads/';
         $file = $dir . $name;
         if (!is_file($file)) {
-            //file_put_contents($file, file_get_contents($image));
-            exec(sprintf('curl --refer %s -o %s %s', ImageHelper::$TARGET, $file, $image));
+            $f3->get('LOGGER')->write(sprintf('curl --refer %s -o %s %s', ImageHelper::HOST, $file, $url));
+            exec(sprintf('curl --refer %s -o %s %s', ImageHelper::HOST, $file, $url));
         }
-        return $f3->get('BASE') . '/data/downloads/' . $name;
+        echo $f3->get('BASE') . '/data/uploads/' . $name;
     }
 
     function delete($f3)
