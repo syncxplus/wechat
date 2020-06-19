@@ -36,7 +36,11 @@
             location.reload();
         });
         $("#img-download").on("click", function () {
+            $(this).attr("disabled", "disabled");
             $.post("{{@BASE}}/image/save", {url: $("img.center-block").attr("src")})
+                .always(function () {
+                    $("#img-download").removeAttr("disabled")
+                })
         });
         $("#img-next").on("click", function () {
             if (images.length) {
