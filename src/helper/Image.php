@@ -42,12 +42,16 @@ class Image
             $crawler->clear();
             $crawler->addHtmlContent($response->body);
             $pages = $crawler->filter('.page a[href]');
-            $lastPage = $pages->eq(count($pages) - 1)->attr('href');
-            $explode = explode('_', substr($lastPage, 0, 0 - strlen('.html')));
-            $pageCount = array_pop($explode);
+            if ($pages->count()) {
+                $lastPage = $pages->eq(count($pages) - 1)->attr('href');
+                $explode = explode('_', substr($lastPage, 0, 0 - strlen('.html')));
+                $pageCount = array_pop($explode);
+            } else {
+                $pageCount = 1;
+            }
             $f3->set($key, $pageCount, self::CACHE);
         }
-        $page = ($pageCount == 1) ? $pageCount : random_int(1, $pageCount);
+        $page = random_int(1, $pageCount);
         $tagNumber = explode('/', $tags[$tag])[2];
         $pageUrl = self::HOST . $tags[$tag] . 'list_' . $tagNumber . '_' . $page . '.html';
         $logger->write('page: ' . $pageUrl);
