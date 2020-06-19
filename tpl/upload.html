@@ -8,6 +8,8 @@
         }
         .btn {
             border-radius: 0;
+            padding: 1rem;
+            font-size: 1.25rem;
         }
         .btn-group {
             display: flex;
@@ -29,8 +31,8 @@
         <input id="upload-file" class="form-control" type="file" name="file" multiple="multiple"/>
     </form>
     <div class="btn-group">
-        <button id="clear" class="btn-block btn btn-default">clear</button>
-        <button id="upload" class="btn-block btn btn-primary">upload</button>
+        <button id="clear" class="btn btn-default">clear</button>
+        <button id="upload" class="btn btn-primary">upload</button>
     </div>
 <script>
     $(function () {
@@ -52,18 +54,18 @@
         //clear previous image display if exists
         $("img").remove();
         //disable upload button
-        var uploadBtn = $("#upload");
+        let uploadBtn = $("#upload");
         uploadBtn.attr("disabled", true);
         uploadBtn.append("<i class='fa fa-spinner fa-spin'></i>");
         //list all images
-        var files = $("#upload-file").get(0).files;
-        var images = new FormData();
+        let files = $("#upload-file").get(0).files;
+        let images = new FormData();
         $.each(files, function (key, value) {
             images.append(key, value);
         });
         //ajax upload
         $.ajax({
-            url: "{{@BASE}}/image/upload",
+            url: "{{@BASE}}/image/upload?code={{@code}}",
             type: "POST",
             cache: false,
             data: images,
@@ -72,9 +74,9 @@
         })
             .done(function (data) {
                 alert(data);
-                var json = JSON.parse(data);
+                let json = JSON.parse(data);
                 if (json.images) {
-                    for (var i = 0; i < json.images.length; i++) {
+                    for (let i = 0; i < json.images.length; i++) {
                         $("body").append('<img class="center-block img-responsive img-thumbnail" src="' + json.images[i] + '"/>')
                     }
                 }
