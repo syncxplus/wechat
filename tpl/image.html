@@ -3,11 +3,10 @@
     <title>image</title>
     <include href="common/header.html"/>
     <style>
-        img {
-            margin: 5px;
-        }
         .btn {
             border-radius: 0;
+            padding: 1rem;
+            font-size: 1.25rem;
         }
         .btn-group {
             display: flex;
@@ -27,14 +26,18 @@
         <button id="img-delete" class="btn btn-danger">Delete</button>
         <button id="img-upload" class="btn btn-danger">Upload</button>
     </div>
+    <div class="container-fluid">
     <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
+    </div>
     <button id="img-refresh" class="btn-block btn btn-success">换一张</button>
     <div class="modal in">
-        <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-dialog modal-sm" role="dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button id="close" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    <h4 class="modal-title">输入验证码:</h4>
+                    <h5 class="modal-title">验证码:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <input id="code" class="form-control"/>
@@ -90,8 +93,8 @@
         function deleteImage(){
             let url = $("img").attr("src");
             $.post("{{@BASE}}/image/delete", {name: url.substr(url.lastIndexOf("/"))})
-                .done(function (data) {
-                    alert(data);
+                .done(function () {
+                    location.reload();
                 })
                 .fail(function (data) {
                     alert(data);

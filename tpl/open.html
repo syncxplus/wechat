@@ -3,11 +3,10 @@
     <title>image</title>
     <include href="common/header.html"/>
     <style>
-        img {
-            margin: 5px;
-        }
         .btn {
             border-radius: 0;
+            padding: 1rem;
+            font-size: 1.25rem;
         }
         #img-refresh {
             position: fixed;
@@ -16,7 +15,9 @@
     </style>
 </head>
 <body>
+    <div class="container-fluid">
     <img class="center-block img-responsive img-thumbnail" src="{{@image}}"/>
+    </div>
     <button id="img-refresh" class="btn-block btn btn-success">换一张</button>
 <script>
     $(function () {
