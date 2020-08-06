@@ -3,8 +3,11 @@
     <title>image</title>
     <include href="common/header.html"/>
     <style>
-        img {
-            margin: 0.75rem 0;
+        div.container-fluid {
+            text-align: center;
+        }
+        img.img-responsive {
+            height: -webkit-fill-available;
         }
         .btn {
             padding: 1rem;
@@ -21,7 +24,7 @@
 </head>
 <body>
 <div class="container-fluid">
-    <img class="center-block img-responsive img-thumbnail"/>
+    <img class="img-responsive"/>
 </div>
 <div class="btn-group">
     <button id="img-refresh" class="btn btn-outline-success">换一组</button>
@@ -31,22 +34,22 @@
 <script>
     $(function () {
         let images = "{{@images}}".split(",");
-        $("img.center-block").attr("src", images.shift());
+        $("img.img-responsive").attr("src", images.shift());
         $("#img-refresh").on("click", function () {
             location.reload();
         });
         $("#img-download").on("click", function () {
             $(this).attr("disabled", "disabled");
-            $.post("{{@BASE}}/image/save", {url: $("img.center-block").attr("src")})
+            $.post("{{@BASE}}/image/save", {url: $("img.img-responsive").attr("src")})
                 .always(function () {
                     $("#img-download").removeAttr("disabled")
                 })
         });
         $("#img-next").on("click", function () {
             if (images.length) {
-                $("img.center-block").removeAttr("src").attr("src", images.shift());
+                $("img.img-responsive").removeAttr("src").attr("src", images.shift());
             } else {
-                $("img.center-block").attr("disabled", "disabled");
+                $("img.img-responsive").attr("disabled", "disabled");
                 alert("没有了")
             }
         })
